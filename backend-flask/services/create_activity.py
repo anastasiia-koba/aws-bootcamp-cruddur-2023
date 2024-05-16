@@ -1,12 +1,16 @@
 import uuid
 from datetime import datetime, timedelta, timezone
+
+from lib.db import db
 class CreateActivity:
+  def 
   def run(message, user_handle, ttl):
     model = {
       'errors': None,
       'data': None
     }
 
+  
     now = datetime.now(timezone.utc).astimezone()
 
     if (ttl == '30-days'):
@@ -40,6 +44,7 @@ class CreateActivity:
         'message': message
       }   
     else:
+      create_activity()
       model['data'] = {
         'uuid': uuid.uuid4(),
         'display_name': 'Andrew Brown',
@@ -49,3 +54,29 @@ class CreateActivity:
         'expires_at': (now + ttl_offset).isoformat()
       }
     return model
+  def create_activity(user_uuid, message, expired_at):
+    user_uuid = ''
+    sql = f"""
+      INSERT INTO (
+        user_uuid,
+        message,
+        expired_at
+      )
+      VALUES (
+        "(user_uuid)",
+        "(message)"
+        "(expired_at)"
+      )
+    """
+    try:
+      conn = pool.connection()
+      cur = conn.cursor()
+
+      cur.execute(sql)
+      conn.commit()
+    except Exception as err:
+      print_sql_err(err)
+    finally  
+      cur.close()
+      conn.close()
+
