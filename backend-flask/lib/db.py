@@ -59,6 +59,7 @@ class Db:
       self.print_sql_err(err)
   # when we want to return a json object
   def query_array_json(self,sql,params={}):
+    print('TEST________________________')
     self.print_sql('array',sql)
 
     wrapped_sql = self.query_wrap_array(sql)
