@@ -14,6 +14,7 @@ if [ "$1" = "prod" ]; then
 else
   echo "Running in development mode"
   CON_URL=$CONNECTION_URL
+  CON_URL=$(sed 's/\@db:/@127.0.0.1:/g' <<<"$CON_URL")
 fi
 
 psql $CON_URL cruddur < $seed_path
