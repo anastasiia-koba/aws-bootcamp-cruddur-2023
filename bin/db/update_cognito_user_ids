@@ -7,7 +7,7 @@ import sys
 print("== db-update-cognito-user-ids")
 
 current_path = os.path.dirname(os.path.abspath(__file__))
-parent_path = os.path.abspath(os.path.join(current_path, '..', '..'))
+parent_path = os.path.abspath(os.path.join(current_path, '..', '..','backend-flask'))
 sys.path.append(parent_path)
 from lib.db import db
 
@@ -18,10 +18,13 @@ def update_users_with_cognito_user_id(handle,sub):
     WHERE
       users.handle = %(handle)s;
   """
+  prev = os.getenv("CONNECTION_URL")
+  os.environ["CONNECTION_URL"] = 'postgresql://postgres:password@localhost:5432/cruddur'
   db.query_commit(sql,{
     'handle' : handle,
     'sub' : sub
   })
+  os.environ["CONNECTION_URL"] = prev
 
 def get_cognito_user_ids():
   userpool_id = os.getenv("AWS_COGNITO_USER_POOL_ID")
