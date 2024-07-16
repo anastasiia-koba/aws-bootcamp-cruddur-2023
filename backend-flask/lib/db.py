@@ -25,7 +25,6 @@ class Db:
 
   def init_pool(self):
     connection_url = os.getenv("CONNECTION_URL")
-    print("\ndb===="+connection_url)
     # connection_url = "postgresql://postgres:password@localhost:5432/cruddur"
     self.pool = ConnectionPool(connection_url)
   # we want to commit data such as an insert
