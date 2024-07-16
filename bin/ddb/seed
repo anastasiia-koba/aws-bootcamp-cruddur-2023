@@ -41,16 +41,7 @@ def get_user_uuids():
   })
   my_user    = next((item for item in users if item["handle"] == 'nrybka'), None)
   other_user = next((item for item in users if item["handle"] == 'bayko'), None)
-  # my_user = {
-  #   'uuid': 'c086c92d-aafe-4fbc-9ccd-6ca92c4b53a1',
-  #   'display_name': 'Andrew Brown',
-  #   'handle': 'nrybka' 
-  # }
-  # other_user = {
-  #   'uuid': 'ced7c873-5431-4b18-b056-9980bd0c4dbf',
-  #   'display_name': 'Andrew Bayko',
-  #   'handle': 'andrewbrown'
-  # } 
+
   results = {
     'my_user': my_user,
     'other_user': other_user
