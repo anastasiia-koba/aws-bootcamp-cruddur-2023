@@ -1,12 +1,15 @@
 #! /usr/bin/env bash
 set -e # stop the execution of the script if it fails
 
-CFN_PATH="/workspace/aws-bootcamp-cruddur-2023/aws/cfn/template.yaml"
+CFN_PATH="/workspace/aws-bootcamp-cruddur-2023/aws/cfn/networking/template.yaml"
 
 cfn-lint $CFN_PATH
 
+BUCKET=$(cfn-toml key deploy.bucket -t $CONFIG_PATH)
+
 aws cloudformation deploy \
-  --stack-name "my-cluster" \
+  --stack-name "CRUDDUR" \
+  --s3-bucket $BUCKET \
   --template-file "$CFN_PATH" \
   --no-execute-changeset \
   --capabilities CAPABILITY_NAMED_IAM
