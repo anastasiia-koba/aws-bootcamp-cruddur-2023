@@ -1,3 +1,4 @@
+
 version: "3.8"
 services:
   backend-flask:
@@ -20,11 +21,15 @@ services:
     #   AWS_COGNITO_USER_POOL_CLIENT_ID: "${AWS_REACT_APP_CLIENT_ID}"
     #   # CONNECTION_URL: "${PROD_CONNECTION_URL}"
     #   CONNECTION_URL: "${CONNECTION_URL}"
-    build: ./backend-flask
+    build:
+      context:  ./backend-flask
+      dockerfile: Dockerfile
     ports:
       - "4567:4567"
     volumes:
       - ./backend-flask:/backend-flask
+    networks:
+      - cruddur-net
   frontend-react-js:
     env_file:
       - frontend-react-js.env
@@ -37,6 +42,8 @@ services:
     build: ./frontend-react-js
     ports:
       - "3000:3000"
+    networks:
+      - cruddur-net
     volumes:
       - ./frontend-react-js:/frontend-react-js
   # xray-daemon:
@@ -61,6 +68,8 @@ services:
     container_name: dynamodb-local
     ports:
       - "8000:8000"
+    networks:
+      - cruddur-net
     volumes:
       - "./docker/dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
@@ -72,16 +81,30 @@ services:
       - POSTGRES_PASSWORD=password
     ports:
       - '5432:5432'
+    networks:
+      - cruddur-net
     volumes: 
-      - db:/var/lib/postgresql/data      
-
+      - db:/var/lib/postgresql/data
+  xray-daemon:
+    hostname: xray-daemon
+    image: "amazon/aws-xray-daemon"
+    environment:
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+      AWS_REGION: "ca-central-1"
+    command:
+      - "xray -o -b xray-daemon:2000"
+    ports:
+      - 2000:2000/udp
+    networks:
+      - cruddur-net
 # the name flag is a hack to change the default prepend folder
 # name when outputting the image names
 networks: 
-  internal-network:
+  cruddur-net:
     driver: bridge
     name: cruddur-net
 
 volumes:
   db:
-    driver: local    
+    driver: local
